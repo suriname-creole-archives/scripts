@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """
-convert van-dyk html to TEI
+convert van-dyk in html format to TEI
+
+the original source text is in rtf. Before running:
+ - rtf exported to html
+ - manually check parallel language fragments are separated by a tab
 """
 import argparse
 from lxml import etree
@@ -15,8 +19,6 @@ from pysuca.utils import (
 
 def strip_newlines(t):
     return t.replace('\n', ' ').replace('\t', '')
-
-
 
 
 def populate_front(div, FRONT, titleStmt):
@@ -80,6 +82,7 @@ def populate_front(div, FRONT, titleStmt):
                         t += span.text
                     pubPlace.text = t.strip()
     return FRONT, titleStmt
+
 
 def handle_p(fw, p, tx_line=False):
 
@@ -180,8 +183,6 @@ def handle_p(fw, p, tx_line=False):
         parent = None
         b = False
 
-
-
         for child in reversed(p):
             if b:
                 break
@@ -191,7 +192,6 @@ def handle_p(fw, p, tx_line=False):
                         if span is not None and span.text is not None and ref in span.text:
                             parent = child
                             b = True
-
         return parent
 
     if "class" in p.attrib:
